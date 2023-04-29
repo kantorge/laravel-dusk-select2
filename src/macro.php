@@ -138,7 +138,7 @@ Browser::macro('select2ClearAll', function ($field, $outerSelector = null, $suff
     $this->click($removeButtonSelector);
 
     // Click outside the select2 to close it
-    if (!$outerSelector) {
+    if ($outerSelector) {
         $this->click($outerSelector);
     }
 
