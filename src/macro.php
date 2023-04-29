@@ -48,6 +48,7 @@ Browser::macro('select2', function ($field, $value = null, $wait = 2, $suffix = 
 
     // check if search field exists and fill it.
     $element = $this->element($searchSelector);
+    $this->waitFor($searchSelector, $wait);
 
     if ($element->isDisplayed()) {
         try {
