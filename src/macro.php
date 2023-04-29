@@ -74,7 +74,7 @@ Browser::macro('select2', function ($field, $value = null, $wait = 2, $suffix = 
     return $this;
 });
 
-Browser::macro('select2-exact-search', function ($field, $value, $wait = 2, $suffix = ' + .select2') {
+Browser::macro('select2ExactSearch', function ($field, $value, $wait = 2, $suffix = ' + .select2') {
     /** @var Browser $this */
     $selector = $field.$suffix;
     $element = $this->element($selector);
@@ -117,7 +117,7 @@ Browser::macro('select2-exact-search', function ($field, $value, $wait = 2, $suf
     return $this;
 });
 
-Browser::macro('select2-clear-all', function ($field, $suffix = ' + .select2') {
+Browser::macro('select2ClearAll', function ($field, $suffix = ' + .select2') {
     /** @var Browser $this */
     $selector = $field.$suffix;
     $element = $this->element($selector);
