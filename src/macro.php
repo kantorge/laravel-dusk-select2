@@ -117,7 +117,12 @@ Browser::macro('select2ExactSearch', function ($field, $value, $wait = 2, $suffi
     return $this;
 });
 
-Browser::macro('select2ClearAll', function ($field, $suffix = ' + .select2') {
+/**
+ * Register a macro for Laravel Dusk, which clears the selection from a given Select2
+ * $field - the selector of the Select2 element
+ * $outerSelector - optionally set an external element, which will be clicked to close the Select2
+ */
+Browser::macro('select2ClearAll', function ($field, $outerSelector = null, $suffix = ' + .select2') {
     /** @var Browser $this */
     $selector = $field.$suffix;
     $element = $this->element($selector);
@@ -133,7 +138,9 @@ Browser::macro('select2ClearAll', function ($field, $suffix = ' + .select2') {
     $this->click($removeButtonSelector);
 
     // Click outside the select2 to close it
-    $this->click('body');
+    if (!$outerSelector) {
+        $this->click($outerSelector);
+    }
 
     return $this;
 });
