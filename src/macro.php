@@ -129,7 +129,11 @@ Browser::macro('select2ClearAll', function ($field, $suffix = ' + .select2') {
     $removeButtonClass    = '.select2-selection__clear';
     $removeButtonSelector = $selector . ' ' . $removeButtonClass;
 
+    // Click the remove button
     $this->click($removeButtonSelector);
+
+    // Click outside the select2 to close it
+    $this->click('body');
 
     return $this;
 });
