@@ -73,3 +73,63 @@ Browser::macro('select2', function ($field, $value = null, $wait = 2, $suffix = 
 
     return $this;
 });
+
+Browser::macro('select2-exact-search', function ($field, $value, $wait = 2, $suffix = ' + .select2') {
+    /** @var Browser $this */
+    $selector = $field.$suffix;
+    $element = $this->element($selector);
+
+    if (!$element && !$element->isDisplayed()) {
+        throw new InvalidArgumentException("Selector [$selector] not found or not displayed.");
+    }
+
+    $highlightedClass    = '.select2-results__option--highlighted';
+    $highlightedSelector = '.select2-results__options ' . $highlightedClass;
+    $searchSelector      = '.select2-container.select2-container--open .select2-search__field';
+
+    $this->click($selector);
+
+    // check if search field exists and fill it.
+    $element = $this->element($searchSelector);
+    $this->waitFor($searchSelector, $wait);
+
+    if ($element->isDisplayed()) {
+        try {
+            foreach ((array) $value as $item) {
+                $element->sendKeys($item);
+                $this->waitForTextIn($highlightedSelector, $item, $wait);
+                $this->click($highlightedSelector);
+            }
+
+            return $this;
+        } catch (WebDriverException $exception) {
+            if (!$exception instanceof ElementNotInteractableException || !$exception instanceof ElementNotVisibleException) {
+                throw $exception;
+            }
+            // ... otherwise ignore the exception and try another way
+        }
+    }
+
+    // another way - w/o search field.
+    $field = str_replace('\\', '\\\\', $field);
+    $this->script("jQuery(\"$field\").val((function () { return jQuery(\"$field option:contains('$value')\").val(); })()).trigger('change')");
+
+    return $this;
+});
+
+Browser::macro('select2-clear-all', function ($field, $suffix = ' + .select2') {
+    /** @var Browser $this */
+    $selector = $field.$suffix;
+    $element = $this->element($selector);
+
+    if (!$element && !$element->isDisplayed()) {
+        throw new InvalidArgumentException("Selector [$selector] not found or not displayed.");
+    }
+
+    $removeButtonClass    = '.select2-selection__clear';
+    $removeButtonSelector = $selector . ' ' . $removeButtonClass;
+
+    $this->click($removeButtonSelector);
+
+    return $this;
+});
